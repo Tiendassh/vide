@@ -1,0 +1,6 @@
+{
+  "name": "Nocturnal Video Player",
+  "description": "Visualizador de videos profesional con soporte de embeds, sección de comentarios interactiva y configuraciones listas para Nginx reverse proxy y despliegue en Render.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
