@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       videos: db.videos,
       logs: db.logs,
       serverRequests: db.serverRequests,
-      telegramUrl: db.telegramUrl || 'https://t.me/nocturnalpos',
+      telegramUrl: db.telegramUrl || 'https://t.me/+8tGCFc_J0eoxOWEx',
       telegramFeed: db.telegramFeed || [],
       inboxMessages: db.inboxMessages || [],
       chatMessages: db.chatMessages || [],

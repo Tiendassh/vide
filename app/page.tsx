@@ -45,7 +45,7 @@ export default function RedesignedDashboard() {
   const [videos, setVideos] = useState<BotVideo[]>([]);
   const [chatMessages, setChatMessages] = useState<LiveChatMessage[]>([]);
   const [telegramFeed, setTelegramFeed] = useState<TelegramFeedPost[]>([]);
-  const [telegramUrl, setTelegramUrl] = useState('https://t.me/nocturnalpos');
+  const [telegramUrl, setTelegramUrl] = useState('https://t.me/+8tGCFc_J0eoxOWEx');
   
   // UI States
   const [loading, setLoading] = useState(true);
@@ -71,7 +71,7 @@ export default function RedesignedDashboard() {
         setVideos(data.videos || []);
         setChatMessages(data.chatMessages || []);
         setTelegramFeed(data.telegramFeed || []);
-        setTelegramUrl(data.telegramUrl || 'https://t.me/nocturnalpos');
+        setTelegramUrl(data.telegramUrl || 'https://t.me/+8tGCFc_J0eoxOWEx');
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -81,7 +81,7 @@ export default function RedesignedDashboard() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    
     fetchData().catch(console.error);
     const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
@@ -111,7 +111,7 @@ export default function RedesignedDashboard() {
       if (res.ok) {
         setNewVideoUrl('');
         setNewVideoTitle('');
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        
     fetchData().catch(console.error);
       }
     } catch (error) {
@@ -137,7 +137,7 @@ export default function RedesignedDashboard() {
           avatarColor: 'bg-emerald-600'
         })
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      
     fetchData().catch(console.error);
     } catch (error) {
       console.error('Error sending chat:', error);
