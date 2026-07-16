@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { 
   Play, Pause, Plus, Trash2, Send, Share2, Copy, Check, MessageSquare, 
-  Link as LinkIcon, Monitor, Users, Shield, Lock, Film, MessagesSquare, SkipBack, SkipForward, ExternalLink
+  Link as LinkIcon, Monitor, Users, Shield, Lock, Film, MessagesSquare, SkipBack, SkipForward, ExternalLink,
+  Menu, X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,6 +41,7 @@ interface TelegramFeedPost {
 
 export default function RedesignedDashboard() {
   const [activeTab, setActiveTab] = useState<'stream' | 'videos' | 'telegram'>('stream');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Data States
   const [videos, setVideos] = useState<BotVideo[]>([]);
@@ -82,6 +84,7 @@ export default function RedesignedDashboard() {
 
   useEffect(() => {
     
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData().catch(console.error);
     const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
@@ -162,20 +165,44 @@ export default function RedesignedDashboard() {
   const currentVideo = videos[currentVideoIndex];
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 font-sans flex overflow-hidden">
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 font-sans flex overflow-hidden relative">
       
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <nav className="w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col p-4">
-        <div className="flex items-center gap-2 mb-8 px-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-            <Monitor className="w-4 h-4 text-white" />
+      <nav className={cn(
+        "w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col p-4 transition-transform duration-300 z-50",
+        "fixed inset-y-0 left-0 md:static md:translate-x-0",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
+        <div className="flex items-center justify-between mb-8 px-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
+              <Monitor className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-semibold text-lg tracking-tight">Nocturnal</span>
           </div>
-          <span className="font-semibold text-lg tracking-tight">Nocturnal</span>
+          {/* Close button inside sidebar on mobile */}
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         <div className="space-y-1 flex-1">
           <button 
-            onClick={() => setActiveTab('stream')}
+            onClick={() => {
+              setActiveTab('stream');
+              setIsSidebarOpen(false);
+            }}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
               activeTab === 'stream' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
@@ -185,7 +212,10 @@ export default function RedesignedDashboard() {
             Sala de Transmisión
           </button>
           <button 
-            onClick={() => setActiveTab('videos')}
+            onClick={() => {
+              setActiveTab('videos');
+              setIsSidebarOpen(false);
+            }}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
               activeTab === 'videos' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
@@ -195,7 +225,10 @@ export default function RedesignedDashboard() {
             Cola de Videos
           </button>
           <button 
-            onClick={() => setActiveTab('telegram')}
+            onClick={() => {
+              setActiveTab('telegram');
+              setIsSidebarOpen(false);
+            }}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
               activeTab === 'telegram' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
@@ -209,6 +242,21 @@ export default function RedesignedDashboard() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden flex items-center justify-between px-4 py-3 bg-neutral-900 border-b border-neutral-800 shrink-0 z-30">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
+              <Monitor className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-semibold text-base tracking-tight text-white">Nocturnal</span>
+          </div>
+          <button 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-1.5 -mr-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </header>
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
