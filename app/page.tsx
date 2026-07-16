@@ -265,7 +265,12 @@ export default function RedesignedDashboard() {
           <div className="flex-1 overflow-y-auto">
             {/* Stream View */}
             {activeTab === 'stream' && (
-              <div className="h-full flex flex-col lg:flex-row p-6 gap-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="h-full flex flex-col lg:flex-row p-6 gap-6"
+              >
                 
                 {/* Player Section */}
                 <div className="flex-1 flex flex-col gap-4">
@@ -380,12 +385,17 @@ export default function RedesignedDashboard() {
                     </div>
                   </form>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Video List View */}
             {activeTab === 'videos' && (
-              <div className="p-8 max-w-5xl mx-auto">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="p-8 max-w-5xl mx-auto"
+              >
                 <div className="mb-8">
                   <h1 className="text-2xl font-semibold mb-2">Cola de Videos</h1>
                   <p className="text-neutral-400">Guarda y administra tu lista de videos por link directo.</p>
@@ -456,12 +466,17 @@ export default function RedesignedDashboard() {
                     ))
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Telegram Integration View */}
             {activeTab === 'telegram' && (
-              <div className="p-8 max-w-5xl mx-auto">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="p-8 max-w-5xl mx-auto"
+              >
                 <div className="mb-8">
                   <h1 className="text-2xl font-semibold mb-2">Integración Telegram</h1>
                   <p className="text-neutral-400">Administra el enlace de tu grupo y monitorea la actividad.</p>
@@ -523,7 +538,7 @@ export default function RedesignedDashboard() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
