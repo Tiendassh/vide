@@ -4,6 +4,7 @@ import { getDb, saveDb, addConnectionLog, incrementRequestCount, BotVideo, Teleg
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
+  console.log('GET /api/videos called');
   const startTime = Date.now();
   incrementRequestCount();
 
