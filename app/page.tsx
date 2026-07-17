@@ -22,15 +22,15 @@ interface LiveChatMessage {
   avatarColor: string;
 }
 
-const NavItem = ({ id, icon: Icon, label, activeTab, setActiveTab }: { 
+const NavItem = ({ id, icon: Icon, label, activeTab, onClick }: { 
   id: 'stream' | 'videos' | 'chat', 
   icon: any, 
   label: string, 
   activeTab: string, 
-  setActiveTab: (tab: 'stream' | 'videos' | 'chat') => void 
+  onClick: () => void 
 }) => (
   <button
-    onClick={() => setActiveTab(id)}
+    onClick={onClick}
     className={cn(
       "flex items-center gap-3 px-4 py-3 rounded-xl transition-all w-full font-medium text-sm",
       activeTab === id 
@@ -45,9 +45,15 @@ const NavItem = ({ id, icon: Icon, label, activeTab, setActiveTab }: {
 
 export default function RedesignedDashboard() {
   const [activeTab, setActiveTab] = useState<'stream' | 'videos' | 'chat'>('stream');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [videos, setVideos] = useState<BotVideo[]>([]);
   const [chatMessages, setChatMessages] = useState<LiveChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const handleTabChange = (tab: 'stream' | 'videos' | 'chat') => {
+    setActiveTab(tab);
+    setIsSidebarOpen(false);
+  };
   
   const fetchData = useCallback(async () => {
     try {
@@ -75,7 +81,10 @@ export default function RedesignedDashboard() {
   return (
     <div className="flex h-screen bg-[#0a0a0f] text-slate-100 font-sans">
       {/* Sidebar */}
-      <aside className="w-72 bg-[#12121a] border-r border-white/5 p-6 flex flex-col">
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 w-72 bg-[#12121a] border-r border-white/5 p-6 flex flex-col transform transition-transform duration-300 md:relative md:translate-x-0",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
         <div className="flex items-center gap-3 mb-10 px-2">
           <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
             <Monitor size={22} className="text-white" />
@@ -84,15 +93,29 @@ export default function RedesignedDashboard() {
         </div>
         
         <nav className="space-y-2 flex-1">
-          <NavItem id="stream" icon={Film} label="Live Stream" activeTab={activeTab} setActiveTab={setActiveTab} />
-          <NavItem id="videos" icon={Play} label="Library" activeTab={activeTab} setActiveTab={setActiveTab} />
-          <NavItem id="chat" icon={MessageSquare} label="Community Chat" activeTab={activeTab} setActiveTab={setActiveTab} />
+          <NavItem id="stream" icon={Film} label="Live Stream" activeTab={activeTab} onClick={() => handleTabChange('stream')} />
+          <NavItem id="videos" icon={Play} label="Library" activeTab={activeTab} onClick={() => handleTabChange('videos')} />
+          <NavItem id="chat" icon={MessageSquare} label="Community Chat" activeTab={activeTab} onClick={() => handleTabChange('chat')} />
         </nav>
       </aside>
+
+      {/* Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto bg-[#0a0a0f] p-10">
         <header className="flex justify-between items-center mb-10">
+          <button 
+            className="md:hidden p-2 text-white"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <Monitor size={24} />
+          </button>
           <h1 className="text-3xl font-extrabold tracking-tight capitalize text-white">
             {activeTab === 'stream' ? 'Live Stream' : activeTab === 'videos' ? 'Video Library' : 'Live Chat'}
           </h1>
