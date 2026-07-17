@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { getSupabase } from '@/lib/supabaseClient';
 import { 
   Play, Pause, Plus, Trash2, Send, Share2, Copy, Check, MessageSquare, 
   Link as LinkIcon, Monitor, Users, Shield, Lock, Film, MessagesSquare, SkipBack, SkipForward, ExternalLink,
@@ -40,7 +41,7 @@ interface TelegramFeedPost {
 }
 
 export default function RedesignedDashboard() {
-  const [activeTab, setActiveTab] = useState<'stream' | 'videos' | 'telegram'>('stream');
+  const [activeTab, setActiveTab] = useState<'stream' | 'videos' | 'telegram' | 'chat' | 'blog' | 'subscribe'>('stream');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Data States
@@ -236,6 +237,45 @@ export default function RedesignedDashboard() {
           >
             <MessagesSquare className="w-4 h-4" />
             Integración Telegram
+          </button>
+          <button 
+            onClick={() => {
+              setActiveTab('chat');
+              setIsSidebarOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              activeTab === 'chat' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
+            )}
+          >
+            <MessageSquare className="w-4 h-4" />
+            Salas de Chat
+          </button>
+          <button 
+            onClick={() => {
+              setActiveTab('blog');
+              setIsSidebarOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              activeTab === 'blog' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
+            )}
+          >
+            <Users className="w-4 h-4" />
+            Blog Temático
+          </button>
+          <button 
+            onClick={() => {
+              setActiveTab('subscribe');
+              setIsSidebarOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              activeTab === 'subscribe' ? "bg-indigo-500/10 text-indigo-400" : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
+            )}
+          >
+            <Shield className="w-4 h-4" />
+            Suscripción Anónima
           </button>
         </div>
       </nav>
@@ -538,6 +578,45 @@ export default function RedesignedDashboard() {
                     </div>
                   </div>
                 </div>
+              </motion.div>
+            )}
+
+            {/* Chat View */}
+            {activeTab === 'chat' && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-8">
+                <h1 className="text-2xl font-semibold mb-4">Salas de Chat</h1>
+                <p>Próximamente: Salas de chat temáticas usando Supabase.</p>
+              </motion.div>
+            )}
+
+            {/* Blog View */}
+            {activeTab === 'blog' && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-8">
+                <h1 className="text-2xl font-semibold mb-4">Blog Temático</h1>
+                <p>Próximamente: Artículos y comunidad.</p>
+              </motion.div>
+            )}
+
+            {/* Subscribe View */}
+            {activeTab === 'subscribe' && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-8 max-w-lg mx-auto">
+                <h1 className="text-2xl font-semibold mb-4">Suscripción Anónima</h1>
+                <p className="text-neutral-400 mb-6">Suscríbete anónimamente para contenido exclusivo y notificaciones.</p>
+                <button
+                  onClick={async () => {
+                     const supabase = getSupabase();
+                     if (!supabase) {
+                       alert("Supabase no configurado");
+                       return;
+                     }
+                     const { data, error } = await supabase.auth.signInAnonymously();
+                     if (error) alert(error.message);
+                     else alert("Suscrito anónimamente!");
+                  }}
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                >
+                  Suscribirse Anónimamente
+                </button>
               </motion.div>
             )}
           </div>
