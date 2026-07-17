@@ -69,15 +69,18 @@ export default function RedesignedDashboard() {
   const fetchData = async () => {
     try {
       const res = await fetch('/api/videos');
-      if (res.ok) {
-        const data = await res.json();
-        setVideos(data.videos || []);
-        setChatMessages(data.chatMessages || []);
-        setTelegramFeed(data.telegramFeed || []);
-        setTelegramUrl(data.telegramUrl || 'https://t.me/+8tGCFc_J0eoxOWEx');
+      if (!res.ok) {
+        const text = await res.text();
+        console.error('Error de API:', res.status, text);
+        throw new Error(`API error: ${res.status} - ${text.substring(0, 50)}`);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      const data = await res.json();
+      setVideos(data.videos || []);
+      setChatMessages(data.chatMessages || []);
+      setTelegramFeed(data.telegramFeed || []);
+      setTelegramUrl(data.telegramUrl || 'https://t.me/+8tGCFc_J0eoxOWEx');
+    } catch (error: any) {
+      console.error('Error detallado en fetchData:', error);
     } finally {
       setLoading(false);
     }
